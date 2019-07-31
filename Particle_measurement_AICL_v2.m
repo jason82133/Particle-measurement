@@ -45,13 +45,13 @@
 %                       The threshold for b/w is now changing with the average background intensity. i.e. the th value
 %                       becomes a relative threshold to the background of each image.
 %       
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 tic
 clear all
 
-% Append the SPT codes
-addpath('C:\Pile Higher and Deeper (PhD)\Area for Data\Analysis methods\Jason coding\main_tracking source code\')
+% Change the path to append bpass code
+addpath('C:\xxx\')
 
 
 MainPath = uigetdir; % Select the folder for averaged images
@@ -70,9 +70,9 @@ for folderN = 1:length(FolderList)
     
 %% Parameter setting
     
-figuredir = ['C:\Pile Higher and Deeper (PhD)\Area for Data\20190326_Linda p53 gel\' FolderList(folderN).name '\ROI\']; % Destination for the figure saving; change the magenta part
+figuredir = ['C:\xxx\' FolderList(folderN).name '\ROI\']; % Destination for the figure saving; change the magenta part
 
-datadir = ['C:\Pile Higher and Deeper (PhD)\Area for Data\20190326_Linda p53 gel\' FolderList(folderN).name '\']; % Destination for the data saving; change the magenta part
+datadir = ['C:\xxx\' FolderList(folderN).name '\']; % Destination for the data saving; change the magenta part
 
 localised_tracking = 0;                % Set 1 for tracking restricted area, specified by the centre (X,Y) and the area size; 0 for entire images.
 
@@ -155,13 +155,13 @@ for i = 1:images
     se = strel('disk', RB_size);
     avg_background(i) = sum(sum(double(imDataOri)))/(ig_size * ig_size);
     
-    imDataB = imtophat(imDataOri, se); % rolling-ball filtered image
+    imDataB = imtophat(imDataOri, se); % top-hat filtered image
 
     imDataG(:,:) = imDataOri - imDataB; % background per unit
 
     imDataBG = imresize(imDataG, mag,'nearest'); %10x background
 
-    imDataF = imresize(imDataB, mag,'nearest'); % 10x rolling-ball filtered image
+    imDataF = imresize(imDataB, mag,'nearest'); % 10x top-hat filtered image
 
     imData = imresize(imDataOri, mag,'nearest'); % 10x original image
 
@@ -359,10 +359,10 @@ end
             A(i)=a;
 
         %% Final results reformation
-        Result(trackNo, 2) = A(i); % area in pixel squared
+        Result(trackNo, 2) = A(i)/pixel_size^2; % area in user-defined unit
         Result(trackNo, 3) = iListN(frames(i))/100; % real int
         Result(trackNo, 4) = sbrListN(frames(i))/100; % signal-to-background ratio
-        Result(trackNo, 5) = pixel_size*(lengthListN(frames(i))/10+0.5); % length; pixel size multiplied by unit length
+        Result(trackNo, 5) = pixel_size*(lengthListN(frames(i))/10+0.5); % particle length in user-defined unit
         
         end
     end
